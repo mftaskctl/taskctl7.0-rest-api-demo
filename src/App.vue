@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div class="app">
+    <div class="forkme">
+      <a href="https://gitee.com/mftaskctl/taskctl7.0-rest-api-demo">Fork me on Gitee</a>
+    </div>
     <Menu mode="horizontal" theme="primary">
       <Menu-item name="title">
         <h3>TASKCTL 业界领先ETL批量调度专家（7.0 rest-api demo）</h3>
@@ -88,4 +91,20 @@ export default class App extends Vue {
 }
 </script>
 
-<style></style>
+<style>
+.app {
+  position: relative;
+}
+.forkme { 
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  line-height: 60px;
+  padding: 0 20px;
+}
+.forkme a {
+  color: #fff!important;
+  font-size: 16px;
+}
+</style>
