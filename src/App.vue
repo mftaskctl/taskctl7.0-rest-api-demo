@@ -25,9 +25,9 @@
         <span>2.启动容器 | POST /tcc/start</span>
         <TccStart slot="content" :headers="headers"/>
       </Panel>
-      <Panel key="ctljobstart">
-        <span>3.运行作业 | POST /job/doit</span>
-        <TccJobStart slot="content" :headers="headers"/>
+      <Panel key="restfulapi">
+        <span>4.调用 Restful API | POST </span>
+        <InvokeRestFulApi slot="content" :headers="headers"/>
       </Panel>
     </Collapse>
   </div>
@@ -41,6 +41,7 @@ import { Message } from "iview";
 import Login from "./components/Login.vue";
 import TccStart from "./components/TccStart.vue";
 import TccJobStart from "./components/TccJobStart.vue";
+import InvokeRestFulApi from "./components/InvokeRestFulApi.vue";
 
 
 axios.interceptors.response.use(
@@ -65,7 +66,7 @@ axios.interceptors.response.use(
 // axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8099";
 @Component({ 
-  components: { Login, TccStart, TccJobStart }, 
+  components: { Login, TccStart, TccJobStart, InvokeRestFulApi }, 
   storage: { keys: ['headers', "baseURL"], namespace: 'app', driver: vuejsStorage.drivers.sessionStorage
  } })
 export default class App extends Vue {
@@ -106,5 +107,9 @@ export default class App extends Vue {
 .forkme a {
   color: #fff!important;
   font-size: 16px;
+}
+pre {
+  height: 300px;
+  overflow: scroll;
 }
 </style>
