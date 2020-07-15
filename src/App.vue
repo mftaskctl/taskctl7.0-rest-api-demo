@@ -1,14 +1,14 @@
 <template>
   <div class="app">
-    <div class="forkme">
-      <a href="https://gitee.com/mftaskctl/taskctl7.0-rest-api-demo">Fork me on Gitee</a>
-    </div>
     <Menu mode="horizontal" theme="primary">
       <Menu-item name="title">
         <h3>TASKCTL 业界领先ETL批量调度专家（7.0 rest-api demo）</h3>
       </Menu-item>
+      <div class="forkme">
+        <a href="https://gitee.com/mftaskctl/taskctl7.0-rest-api-demo">Fork me on Gitee</a>
+      </div>
     </Menu>
-    <Collapse v-model="activeKeys">
+    <Collapse v-model="activeKeys" accordion >
       <Panel name="config">
         <span>Cors Request baseURL</span>
         <i-form slot="content" :label-width="80" inline>
@@ -45,6 +45,7 @@ import InvokeRestFulApi from "./components/InvokeRestFulApi.vue";
 
 // axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8099";
+axios.defaults.timeout = 5 * 1000;
 @Component({ 
   components: { Login, TccStart, TccJobStart, InvokeRestFulApi }, 
   storage: { keys: ['headers', "baseURL"], namespace: 'app', driver: vuejsStorage.drivers.sessionStorage} 
@@ -80,6 +81,7 @@ export default class App extends Vue {
       },
       error => {
         if (!error.response) error.response = {};
+        if (typeof error.response.status != "number") error.response.status = 504;
         // 未登录
         if (error.response.status == 401) {
           this.$Modal.confirm({
@@ -128,6 +130,15 @@ export default class App extends Vue {
 .app {
   position: relative;
 }
+.ivu-collapse {
+  margin: 5px;
+  height: calc(100vh - 70px);
+  overflow: auto;
+}
+.ivu-collapse-content {
+  max-height: calc(100vh - 70px - 40px * 4);
+  overflow: auto;
+}
 .forkme { 
   position: absolute;
   top: 0;
@@ -140,7 +151,6 @@ export default class App extends Vue {
   color: #fff!important;
   font-size: 16px;
 }
-
 pre > code {
   overflow: hidden;
   word-break: break-all;
