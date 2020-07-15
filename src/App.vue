@@ -108,8 +108,4 @@ export default class App extends Vue {
   color: #fff!important;
   font-size: 16px;
 }
-pre {
-  height: 300px;
-  overflow: scroll;
-}
 </style>

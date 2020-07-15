@@ -12,13 +12,13 @@
       </Form-item>
     </i-form>
     <Divider>request/response</Divider>
-    <pre :key="headersJsonStr + rspStr"><code v-highlight>
-      // headers 头部认证信息
-      {{ headersJsonStr }} 
+<pre :key="headersJsonStr + rspStr"><code v-highlight>
+  // headers 头部认证信息
+  {{ headersJsonStr }} 
 
-      // response 请求返回值
-      {{ rspStr }} 
-    </code></pre>
+  // response 请求返回值
+  {{ rspStr }} 
+</code></pre>
     <Divider>Code Preview</Divider>
     <pre v-once><code v-highlight>
     import axios from "axios";

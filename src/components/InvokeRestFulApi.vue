@@ -45,12 +45,13 @@
     * @return void
     */
     async invokeRestfulApi(uri: string, method: uri, queryStringParameters: stirng, requestPayload: { [key: stirng]: any } = {}) {
-      const params = qs.stringify({ appid, tccid, jobname });
       this.loading = true;
-      const rsp: any = await axios[method](`${uri}?${queryStringParameters}`, requestPayload, {
+      const data = requestPayload;
+      const rsp: any = await axios.post(`${uri}?${queryStringParameters}`, data, {
         headers: this.headers
       });
-      this.rspStr = JSON.stringify({...rsp, success: undefined}, null, 2);
+      this.reqStr = JSON.stringify({uri, method, queryStringParameters, requestPayload});
+      this.rspStr = JSON.stringify({...rsp, success: undefined});
       this.loading = false;
       if (!rsp.success) return;
       this.$Message.success("调用成功");
@@ -117,9 +118,8 @@ export default class InvokeRestfulApi extends Vue {
     const rsp: any = await axios.post(`${uri}?${queryStringParameters}`, data, {
       headers: this.headers
     });
-    console.log(`${uri}?${queryStringParameters}`, {uri, method, queryStringParameters, requestPayload});
-    this.reqStr = JSON.stringify({uri, method, queryStringParameters, requestPayload}, null, 2);
-    this.rspStr = JSON.stringify({...rsp, success: undefined}, null, 2);
+    this.reqStr = JSON.stringify({uri, method, queryStringParameters, requestPayload});
+    this.rspStr = JSON.stringify({...rsp, success: undefined});
     this.loading = false;
     if (!rsp.success) return;
     this.$Message.success("调用成功");
