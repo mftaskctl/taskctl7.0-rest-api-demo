@@ -9,9 +9,7 @@ declare module 'iview' {
   export const Message: any;
 }
 
-
 declare module 'vuejs-storage' {
   const vuejsStorage: any;
   export default vuejsStorage;
 }
-

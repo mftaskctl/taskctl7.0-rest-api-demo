@@ -22,7 +22,8 @@
       </Form-item>
     </i-form>
     <Divider>request/response</Divider>
-<pre :key="headersJsonStr + rspStr"><code v-highlight>
+    <pre :key="headersJsonStr + rspStr">
+<code v-highlight>
 // headers 头部认证信息
 {{ headersJsonStr }} 
 
@@ -31,7 +32,8 @@
 
 // response 请求返回值
 {{ rspStr }} 
-</code></pre>
+</code>
+    </pre>
     <Divider>Code Preview</Divider>
     <pre v-once><code v-highlight>
     import axios from "axios";
@@ -84,8 +86,13 @@ export default class InvokeRestfulApi extends Vue {
 
   /** */
   invokeRestfulApi2(uri: string, method: string, queryStringParameters: string, requestPayload: string) {
-    const json = JSON.parse(requestPayload);
-    return this.invokeRestfulApi(uri, method, queryStringParameters, json);
+    try {
+      const json = JSON.parse(requestPayload || "{}");
+      return this.invokeRestfulApi(uri, method, queryStringParameters, json);
+    } catch (e) {
+      console.error('解析请求体(requestPayload):异常', e);
+      this.$Modal.error({ content: "requestPayload 不是有效的JSON格式!" });
+    }
   }
 
   invokeJobList() {
@@ -126,12 +133,3 @@ export default class InvokeRestfulApi extends Vue {
   }
 }
 </script>
-
-<style scoped>
-code {
-  overflow: hidden;
-  overflow: hidden;
-  word-break: break-all;
-  white-space: pre-wrap;
-}
-</style>

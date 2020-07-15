@@ -43,32 +43,12 @@ import TccStart from "./components/TccStart.vue";
 import TccJobStart from "./components/TccJobStart.vue";
 import InvokeRestFulApi from "./components/InvokeRestFulApi.vue";
 
-
-axios.interceptors.response.use(
-  ({ data: res }) => {
-    res.success = res.code === 0;
-    if (!res.success) {
-      const message = typeof res.data == "string" ? res.data : res.message;
-      Message.error(message || res.message || "操作失败");
-    }
-    return res;
-  },
-  error => {
-    Message.error(error.message || error || "操作失误");
-    return {
-      success: false,
-      message: error.message,
-      error
-    };
-  }
-);
-
 // axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8099";
 @Component({ 
   components: { Login, TccStart, TccJobStart, InvokeRestFulApi }, 
-  storage: { keys: ['headers', "baseURL"], namespace: 'app', driver: vuejsStorage.drivers.sessionStorage
- } })
+  storage: { keys: ['headers', "baseURL"], namespace: 'app', driver: vuejsStorage.drivers.sessionStorage} 
+})
 export default class App extends Vue {
   /**  */
   activeKeys = ["login", "ctlstart"];
@@ -83,6 +63,58 @@ export default class App extends Vue {
   }
 
   created() {
+    // 处理开发模式，热加载，多次注册拦截器
+    axios.interceptors.response['handlers'].splice(0);
+    // 拦截器
+    axios.interceptors.response.use(
+      (...args) => {
+        console.warn(args);
+        const [{ data: res = {} }] = args;
+        res.success = res.code === 0;
+        if (!res.success) {
+          const message = typeof res.data == "string" ? res.data : res.message;
+          // this.$Message.error(message || res.message || "操作失败");
+          this.$Notice.error({ title: `请求异常 [${res.code}]`, desc: message || res.message || "操作失败"})
+        }
+        return res;
+      },
+      error => {
+        if (!error.response) error.response = {};
+        // 未登录
+        if (error.response.status == 401) {
+          this.$Modal.confirm({
+            title: "权限认证",
+            content: "用户未登录，请登录！",
+            okText: "去登录",
+            onOk: () => this.activeKeys = ["login"]
+          });
+        } else if (error.response.status == 403) {
+          this.$Modal.confirm({
+            title: "权限认证",
+            content: "用户已失效，请重新登录!",
+            okText: "去登录",
+            onOk: () => this.activeKeys = ["login"]
+          });
+        } else if (error.response.status == 404) {
+          this.$Modal.confirm({
+            title: "请求404",
+            content: "请检查请求地址uri是否正确？<br>请检查baseUrl配置是否正确？",
+            okText: "去配置baseURL",
+            onOk: () => this.activeKeys = ["login"]
+          });
+        } else {
+          // this.$Message.error(error.message || error || "操作失误");
+           this.$Notice.error({ title: `请求异常 [${error.response.status}]`, desc: error.message || error || "操作失败"})
+        }
+        return {
+          success: false,
+          code: error.response.status,
+          message: error.message,
+          data: error.response.data
+        };
+      }
+    );
+
     if (process.env.NODE_ENV == 'production') {
       axios.defaults.withCredentials = false;
       if (!this.baseURL) this.baseURL = "http://192.168.0.199:8099";
@@ -107,5 +139,11 @@ export default class App extends Vue {
 .forkme a {
   color: #fff!important;
   font-size: 16px;
+}
+
+pre > code {
+  overflow: hidden;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 </style>

@@ -12,18 +12,15 @@
         </i-input>
       </Form-item>
       <Form-item>
-        <i-button
-          type="primary"
-          :loading="loading"
-          @click.native="login(form.username, form.password)"
-          >登录</i-button
-        >
+        <i-button type="primary" :loading="loading" @click.native="login(form.username, form.password)">登录</i-button>
       </Form-item>
     </i-form>
-    <pre :key="headersJsonStr"><code v-highlight>
-      // headers 头部认证信息
-      {{ headersJsonStr }} 
-    </code></pre>
+    <pre :key="headersJsonStr">
+<code v-highlight>
+// headers 头部认证信息
+{{ headersJsonStr }} 
+</code>
+    </pre>
     <Divider>Code Preview</Divider>
     <pre v-once><code v-highlight>
     import axios from "axios";
