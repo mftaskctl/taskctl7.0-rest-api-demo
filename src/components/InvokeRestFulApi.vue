@@ -126,3 +126,12 @@ export default class InvokeRestfulApi extends Vue {
   }
 }
 </script>
+
+<style scoped>
+code {
+  overflow: hidden;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+</style>
